@@ -14,8 +14,8 @@ end
 
 % Define static matricies
 A = 1;
-Q = vel_var^2;
-R = 10*range_var^2;
+Q = vel_var;
+R = 10*range_var;
 
 % Define initial values
 x_i = sqrt(max(r_dat.^2 - ell^2, 0.0));      % Take states to just be what you measured

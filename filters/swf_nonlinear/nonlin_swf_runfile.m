@@ -1,5 +1,5 @@
 % AUTHOR:       Daniil Lisus (260669654)
-% TOPIC:        MLG Batch Estimation
+% TOPIC:        Nonlinear Batch Estimation
 % MODULE:       Runfile
 % DESCRIPTION:  
 
@@ -11,45 +11,59 @@
 clear;
 clc;
 close all;
-parameters;
-% Change this path to be to the matrix lie tools
-addpath(genpath('S:\School\Grad\Packages\MATLAB_Packages\decar_mocap_tools'))
 
 % Time discreitzation
 dt = 0.1;
-T = 0:dt:2.3;
+T = 0:dt:10.0;
 
 % Noise generating variance
-% Go to Parameters to change noise values
+range_var = 0.3^2;
+vel_var = 0.05^2;
 
-% Initial guess
-X_check_0 = SE3.synthesize(zeros(3,1), zeros(3,1));
-P_check_0 = diag([(pi/2)^2,(pi/2)^2,(pi/2)^2,1.0^2,1.0^2,1.0^2]);
+% Define position up the wall of point being measured
+ell = 2.0;     % m
+
+% Initial guesses
+x_check_0 = 2.0;
+P_check_0 = 2.0^2;
+
+% 1 - Generate position/velocity data from spring-mass model using ode45
+% 0 - Generate position/velocity data from simple sinusoidal function
+plot_ode = 0;
+
+% 2 - Run prediction only
+% 1 - Measurements come in at same frequency
+% 0 - Range is updated at 1/10th frequency of odometry
+same_freq = 0;
 
 % Control iteration params
-max_iter = 200;    % Maximum number of iterations for the algorithm
-LM_iter = 7;       % Number of iterations to do before turning on LM
+max_iter = 10000;
 tol_step = 10^-7;   % Step tolerance criteria
 tol_grad = 10^-7;   % Gradient tolerance criteria (for LM)
-solver = "GN";      % Choose Gauss Newton ("GN") or Levenberg–Marquardt ("LM") 
+solver = "LM";      % Choose Gauss Newton ("GN") or Levenberg–Marquardt ("LM") 
 
+% Control sliding window parameters
+win_size = 10;
+marg_size = 5;
+
+% Correct T so that we dont have non solved states
+T = T(1:(size(T,2)-mod(size(T,2), win_size)));
 
 %% -----------------------------------------------------------------------
 %   Generate Data
 %-------------------------------------------------------------------------
-MLG_batch_gen_corrupt_data
+nonlin_swf_gen_corrupt_data
 
 %% -----------------------------------------------------------------------
 %   Apply Kalman Filter
 %-------------------------------------------------------------------------
 if solver == "GN"
-    MLG_batch_filter_GN
+    nonlin_swf_filter_GN
 elseif solver == "LM"
-    MLG_batch_filter_LM
+    nonlin_swf_filter_LM
 end
-
 %% -----------------------------------------------------------------------
 %   Plot
 %-------------------------------------------------------------------------
-MLG_batch_plots
+nonlin_swf_plots
 

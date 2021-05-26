@@ -18,8 +18,8 @@ B = T(2)-T(1);
 C = 1;
 L = 1;
 M = 1;
-Q = vel_var^2;
-R = 10*pos_var^2;
+Q = vel_var;
+R = 10*pos_var;
 
 % Get num of states
 K = length(r_dat);
