@@ -17,7 +17,7 @@ addpath(genpath('S:\School\Grad\Packages\MATLAB_Packages\decar_mocap_tools'))
 
 % Time discreitzation
 dt = 0.1;
-T = 0:dt:100.0;
+T = 0:dt:10.0;
 
 % Noise generating variance
 % Go to Parameters to change noise values
