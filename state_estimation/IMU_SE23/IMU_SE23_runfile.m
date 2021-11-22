@@ -9,7 +9,7 @@
 % House cleaning
 clear;
 clc;
-%close all;
+close all;
 %%
 % Add paths
 addpath(genpath('S:/School/Grad/packages/MATLAB_Packages/trajectory_gen/sim_generator'))
@@ -26,11 +26,17 @@ pos_0 = zeros(3,1);
 b_g_0 = 0.00*ones(3,1);
 b_a_0 = 0.00*ones(3,1);
 % Uncertainty on initial states
-P_rot_0 = (pi/4)^2*ones(1,3);
-P_vel_0 = (1.0)^2*ones(1,3);
-P_pos_0 = (1.0)^2*ones(1,3);
-P_b_g_0 = (0.1)^2*ones(1,3);
-P_b_a_0 = (0.1)^2*ones(1,3);
+% P_rot_0 = (pi/4)^2*ones(1,3);
+% P_vel_0 = (1.0)^2*ones(1,3);
+% P_pos_0 = (1.0)^2*ones(1,3);
+% P_b_g_0 = (0.1)^2*ones(1,3);
+% P_b_a_0 = (0.1)^2*ones(1,3);
+P_rot_0 = (0.00001)^2*ones(1,3);
+P_vel_0 = (0.00001)^2*ones(1,3);
+P_pos_0 = (0.00001)^2*ones(1,3);
+P_b_g_0 = (0.00001)^2*ones(1,3);
+P_b_a_0 = (0.00001)^2*ones(1,3);
+
 % Assemble full element
 X_check_0_init = SE23xR3x2.synthesize(rot_0, vel_0, pos_0, b_g_0, b_a_0);
 % Assemble full uncertainty
@@ -48,11 +54,11 @@ IMU_preint = 1;
 
 % Control sliding window parameters
 use_marg = 0;
-win_size = 226;
+win_size = 10;
 marg_size = 25;
 
 % Control measurements
-use_odom = 1;
+use_odom = 0;
 
 verbose = true;
 
