@@ -33,6 +33,7 @@ Q_r = diag([sigma_gyro^2, sigma_gyro^2, 5*sigma_gyro^2,...
             sigma_accel^2, sigma_accel^2, sigma_accel^2,...
             sigma_gyro_bias^2, sigma_gyro_bias^2, sigma_gyro_bias^2,...
             sigma_accel_bias^2, sigma_accel_bias^2, sigma_accel_bias^2]); % Continuous time PSD
+
 % Define odometry uncertainty
 odom_lin_ps_sigma = 0.01;    % [m / s], uncertainty on pseudo linear measurements
 odom_ang_ps_sigma = 0.01;    % [rad / s], uncertainty on pseudo ang measurements
@@ -48,7 +49,11 @@ r_meas = r_dat(:,1);
 
 % Initialization
 num_xi = length(P_check_0);
-num_states = length(gt_states.time);    % Data gen takes care of IMU preint flag
+if use_marg
+    num_states = length(gt_states.time);    % Data gen takes care of IMU preint flag
+else
+    num_states = win_size;
+end
 dt_imu = sensorData.t_IMU(2);
 
 x_batch = zeros(num_xi, num_states);
@@ -250,6 +255,7 @@ for t_idx = 2:num_states
                 Sigma_ii = inv(SE23xR3x2.adjoint(X_i(:,:,ii))) * Sigma_ii * inv(SE23xR3x2.adjoint(X_i(:,:,ii))');
             end
             sig_batch(:,win_t(ii)) = 3*diag(sqrt(Sigma_ii));
+            Sig_batch(:,:,win_t(ii)) = Sigma_ii;
         end
         
         if ~use_marg
@@ -337,8 +343,34 @@ for t_idx = 2:num_states
     end
 end
 
-% Compute final RMSE
+%% Compute final RMSE
 RMSE = sqrt(mean(mean(err_batch.^2)))
+
+for ii = 1:length(err_batch)
+    RMSE_total(ii) = sqrt(mean(mean(err_batch(:,1:ii).^2)));
+    RMSE_yaw(ii) = sqrt(mean(mean(err_batch(3,1:ii).^2)));
+    RMSE_pos(ii) = sqrt(mean(mean(err_batch(7:9,1:ii).^2)));
+    
+    NEES_total(ii) = err_batch(:,ii)' / Sig_batch(:,:,ii) * err_batch(:,ii);
+    NEES_yaw(ii) = err_batch(3,ii)' / Sig_batch(3,3,ii) * err_batch(3,ii);
+    NEES_pos(ii) = err_batch(7:9,ii)' / Sig_batch(7:9,7:9,ii) * err_batch(7:9,ii);
+end
+
+if error_deff == "left"
+    RMSE_total_LI = RMSE_total;
+    RMSE_yaw_LI = RMSE_yaw;
+    RMSE_pos_LI = RMSE_pos;
+    NEES_total_LI = NEES_total;
+    NEES_yaw_LI = NEES_yaw;
+    NEES_pos_LI = NEES_pos;
+else
+    RMSE_total_RI = RMSE_total;
+    RMSE_yaw_RI = RMSE_yaw;
+    RMSE_pos_RI = RMSE_pos;
+    NEES_total_RI = NEES_total;
+    NEES_yaw_RI = NEES_yaw;
+    NEES_pos_RI = NEES_pos;
+end
         
 %% Function to evaluate Jacobians and errors
 function [F_1, F_2, G_1] = make_err_Jacobians(X_i, del_X, Del_t, bias_J, b_bar, r_meas, err_deff)

@@ -12,7 +12,7 @@ font_size = 18;
 line_size = 15;
 line_width = 4;
 
-T = gt_states.time;
+T = gt_states.time(1:num_states);
 num_rows = 5;
 figure
 subplot(num_xi/num_rows,num_rows,1);
@@ -468,3 +468,90 @@ xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
 ylabel('Error $\xi_3^{b_a}$ (m)','fontsize',font_size,'Interpreter','latex');
 set(gca,'FontSize',font_size)
 
+%%
+figure
+subplot(3,1,1);
+plot(T,RMSE_total_LI,'b','Linewidth',line_width);
+hold on
+grid on
+grid minor
+plot(T,RMSE_total_RI,'r','Linewidth',line_width);
+%ylim([1.5,3.5])
+leg = legend("Left Invariant", "Right Invariant",'Interpreter','latex','fontsize',font_size);
+%leg.NumColumns=1;
+%title('\textbf{Cart Position in Front of a Wall with Time}','fontsize',font_size,'Interpreter','latex') 
+xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
+ylabel('Total RMSE','fontsize',font_size,'Interpreter','latex');
+set(gca,'FontSize',font_size)
+
+subplot(3,1,2);
+plot(T,RMSE_yaw_LI*180/pi,'b','Linewidth',line_width);
+hold on
+grid on
+grid minor
+plot(T,RMSE_yaw_RI*180/pi,'r','Linewidth',line_width);
+%ylim([1.5,3.5])
+%leg = legend({'$\pm3\sigma$ Bound', '$x_{\textrm{true}} - \hat{x}$'},'Interpreter','latex','fontsize',font_size);
+%leg.NumColumns=1;
+%title('\textbf{Cart Position in Front of a Wall with Time}','fontsize',font_size,'Interpreter','latex') 
+xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
+ylabel('Yaw RMSE (deg)','fontsize',font_size,'Interpreter','latex');
+set(gca,'FontSize',font_size)
+
+subplot(3,1,3);
+plot(T,RMSE_pos_LI,'b','Linewidth',line_width);
+hold on
+grid on
+grid minor
+plot(T,RMSE_pos_RI,'r','Linewidth',line_width);
+%ylim([1.5,3.5])
+%leg = legend({'$\pm3\sigma$ Bound', '$x_{\textrm{true}} - \hat{x}$'},'Interpreter','latex','fontsize',font_size);
+%leg.NumColumns=1;
+%title('\textbf{Cart Position in Front of a Wall with Time}','fontsize',font_size,'Interpreter','latex') 
+xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
+ylabel('Position RMSE (m)','fontsize',font_size,'Interpreter','latex');
+set(gca,'FontSize',font_size)
+
+%%
+figure
+subplot(3,1,1);
+plot(T,NEES_total_LI,'b','Linewidth',line_width);
+hold on
+grid on
+grid minor
+plot(T,NEES_total_RI,'r','Linewidth',line_width);
+%ylim([1.5,3.5])
+leg = legend("Left Invariant", "Right Invariant",'Interpreter','latex','fontsize',font_size);
+%leg.NumColumns=1;
+%title('\textbf{Cart Position in Front of a Wall with Time}','fontsize',font_size,'Interpreter','latex') 
+xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
+ylabel('Total NEES','fontsize',font_size,'Interpreter','latex');
+set(gca,'FontSize',font_size)
+
+subplot(3,1,2);
+plot(T,NEES_yaw_LI,'b','Linewidth',line_width);
+hold on
+grid on
+grid minor
+plot(T,NEES_yaw_RI,'r','Linewidth',line_width);
+%ylim([1.5,3.5])
+%leg = legend({'$\pm3\sigma$ Bound', '$x_{\textrm{true}} - \hat{x}$'},'Interpreter','latex','fontsize',font_size);
+%leg.NumColumns=1;
+%title('\textbf{Cart Position in Front of a Wall with Time}','fontsize',font_size,'Interpreter','latex') 
+xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
+ylabel('Yaw NEES','fontsize',font_size,'Interpreter','latex');
+set(gca,'FontSize',font_size)
+
+subplot(3,1,3);
+plot(T,NEES_pos_LI,'b','Linewidth',line_width);
+hold on
+grid on
+grid minor
+plot(T,NEES_pos_RI,'r','Linewidth',line_width);
+%ylim([1.5,3.5])
+%leg = legend({'$\pm3\sigma$ Bound', '$x_{\textrm{true}} - \hat{x}$'},'Interpreter','latex','fontsize',font_size);
+%leg.NumColumns=1;
+%title('\textbf{Cart Position in Front of a Wall with Time}','fontsize',font_size,'Interpreter','latex') 
+xlabel('Time (s)','fontsize',font_size,'Interpreter','latex');
+ylabel('Position NEES','fontsize',font_size,'Interpreter','latex');
+set(gca,'FontSize',font_size)

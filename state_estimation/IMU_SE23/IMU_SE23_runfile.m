@@ -14,15 +14,15 @@ close all;
 % Add paths
 addpath(genpath('S:/School/Grad/packages/MATLAB_Packages/trajectory_gen/sim_generator'))
 addpath(genpath('S:/School/Grad\Packages/MATLAB_Packages/decar_mocap_tools'))
-
+%%
 % GT trajectory speed 
 traj.speed = 1.0;
 
 % Initial guess
 % Initial states
 rot_0 = zeros(3,1);
-vel_0 = [traj.speed;0; 0];
-pos_0 = zeros(3,1);
+vel_0 = [1; 0; 0];
+pos_0 = [0; 0; 0];
 b_g_0 = 0.00*ones(3,1);
 b_a_0 = 0.00*ones(3,1);
 % Uncertainty on initial states
@@ -54,27 +54,30 @@ IMU_preint = 1;
 
 % Control sliding window parameters
 use_marg = 0;
-win_size = 10;
-marg_size = 25;
+win_size = 20;
+marg_size = 10;
 
 % Control measurements
 use_odom = 0;
 
 verbose = true;
 
-error_deff = "right";
+error_deff_list = ["right", "left"];
 
 %% -----------------------------------------------------------------------
 %   Generate Data
 %-------------------------------------------------------------------------
 config_data_generator
+%%
 main_data_generator
 % gt_SE23R3R3 contains ground truth states
 % sensorData contains noisy sensor measurements
 %% -----------------------------------------------------------------------
 %   Apply Batch Filter
 %-------------------------------------------------------------------------
-IMU_SE23_preint_batch_filter_LM
+for error_deff = error_deff_list
+    IMU_SE23_preint_batch_filter_LM
+end
 
 %% -----------------------------------------------------------------------
 %   Plot
