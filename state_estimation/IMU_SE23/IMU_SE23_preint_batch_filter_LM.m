@@ -56,10 +56,10 @@ else
 end
 dt_imu = sensorData.t_IMU(2);
 
-x_batch = zeros(num_xi, num_states);
-x_true = zeros(num_xi, num_states);
-err_batch = zeros(num_xi, num_states);
-sig_batch = zeros(num_xi, num_states);
+x_batch = [];
+x_true = [];
+err_batch = [];
+sig_batch = [];
 
 % Set up sliding window stuff
 win_pop = 1;    % We initialize window with our initial guess
@@ -344,6 +344,7 @@ for t_idx = 2:num_states
 end
 
 %% Compute final RMSE
+final_num_states = size(Sig_batch,3);
 RMSE = sqrt(mean(mean(err_batch.^2)))
 
 for ii = 1:length(err_batch)

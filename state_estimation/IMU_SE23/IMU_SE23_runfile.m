@@ -53,7 +53,7 @@ tol_grad = 10^-7;   % Gradient tolerance criteria (for LM)
 IMU_preint = 1;
 
 % Control sliding window parameters
-use_marg = 0;
+use_marg = 1;
 win_size = 20;
 marg_size = 10;
 

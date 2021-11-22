@@ -12,7 +12,7 @@ font_size = 18;
 line_size = 15;
 line_width = 4;
 
-T = gt_states.time(1:num_states);
+T = gt_states.time(1:final_num_states);
 num_rows = 5;
 figure
 subplot(num_xi/num_rows,num_rows,1);
